@@ -18,18 +18,18 @@ function initMap(): void {
 
   // This example uses a local copy of the GeoJSON stored at
   // http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojsonp
-  script.src = 'test.js';
+  script.src = 'test2.js';
   document.getElementsByTagName('head')[0].appendChild(script);
 }
 
 function eqfeed_callback(results: any) {
-  const heatmapData: google.maps.LatLng[] = [];
+  const heatmapData: google.maps.WeightedLocation[] = [];
 
-  for (let i = 0; i < results.value.length; i++) {
-    const coords = results.value[i];
-    const latLng = new google.maps.LatLng(coords.Latitude, coords.Longitude);
+  for (let i = 0; i < results.length; i++) {
+    const coords = results[i];
+    const latLng = new google.maps.LatLng(coords.LATITUDE, coords.LONGITUDE);
 
-    heatmapData.push(latLng);
+    heatmapData.push({location:latLng, weight:coords.cok_agir_hasarli_bina_sayisi});
   }
 
   const heatmap = new google.maps.visualization.HeatmapLayer({
@@ -37,6 +37,7 @@ function eqfeed_callback(results: any) {
     dissipating: false,
     map: map,
   });
+  heatmap.set('radius', 0.05)
 }
 
 declare global {
